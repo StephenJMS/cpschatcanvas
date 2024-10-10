@@ -1,0 +1,633 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f5f7;
+	font-size: 14px;
+	color: #002664;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* #globalHeader {
+    background-color: #002664;
+    color: #fff;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+} */
+
+#globalHeader .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+}
+
+/* #globalHeader h1 {
+    font-size: 18px;
+    margin: 0;
+    flex: 1;
+} */
+
+#globalHeader {
+    background-color: transparent; /* Semi-transparent */
+    color: #002664;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 0px;
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */ /* Lighter shadow */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* backdrop-filter: blur(8px); */ /* Glassy effect */
+    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Apple-inspired font */
+    font-weight: 400; /* Less bold */
+}
+
+#globalHeader h1 {
+    font-size: 18px; /* Slightly smaller font */
+    font-weight: 500; /* Modern, light font */
+    margin: 0;
+}
+
+#globalHeader .header-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+#globalHeader .toggle-container {
+    display: flex;
+    align-items: center;
+}
+
+#globalHeader nav button {
+    background-color: #0078d4;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+	position: relative;
+}
+
+#globalHeader nav button:hover {
+    background-color: #005a9e;
+}
+
+#mainContent {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    height: calc(100vh - 60px);
+}
+
+#leftPanel {
+    width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* #leftPanel:hover {
+    background-color: transparent;
+} */
+
+h2 {
+    font-size: 16px;
+    color: #002664;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+#rightPanel {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+#chatHeading {
+    background-color: #f1f3f5;
+    color: #333;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#chatHeading h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+#webchat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    border-top: 1px solid #e0e0e0;
+    height: 100%;
+    overflow-y: auto;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent background for glass effect */
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    backdrop-filter: blur(8px); /* Apply blur effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+li:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+button {
+    background-color: transparent;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: transparent;
+}
+
+#suggestions {
+    margin-bottom: 20px;
+}
+
+/* Glass effect for the grid container */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.0004); /* Slightly transparent background */
+    backdrop-filter: blur(50px); /* Glassmorphism effect for container */
+    border-radius: 12px; /* Optional: add rounded corners for a softer look */
+}
+
+/* Glass effect for the grid items */
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.003); /* Glass effect background */
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 8px;
+    backdrop-filter: blur(8px); /* Blur effect for glassmorphism */
+}
+
+/* Hover effect for grid items */
+.grid-item:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Slightly more opaque on hover */
+    border-color: rgba(255, 255, 255, 0.3); /* Lighter border on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow on hover */
+    color: #D7153A; /* Change text color on hover */
+    backdrop-filter: blur(8px) brightness(1.1); /* Maintain glass effect with added brightness */
+}
+
+/* Optional: Adding a subtle transition effect */
+.grid-item {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+
+/* .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.3); 
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 8px;
+    backdrop-filter: blur(8px); 
+}
+
+.grid-item:hover {
+    /* background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) ;
+}*/
+
+/* .grid-item:hover .question-title {
+    color: #FFFFFF;
+} */ 
+
+.icon {
+    width: 25px;
+    height: 25px;
+}
+
+.question-title {
+    font-size: 14px;
+    color: #004165;
+    margin: 0;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    backdrop-filter: blur(8px); /* Blur for question titles */
+
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 50%;
+    padding: 20px;
+    width: 10px;
+    height: 10px;
+}
+
+.shimmer-wrapper {
+    display: none;
+    width: 100%;
+    height: 20px; /* Adjust height as needed */
+    background: #f6f7f8;
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #f6f7f8 0%, #e0e0e0 50%, #f6f7f8 100%);
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+body {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f4f5f7; /* Fallback if image doesn't load */
+}
+#leftPanel, #rightPanel {
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    border-radius: 2px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+#summary {
+    background: rgba(255, 255, 255, 0.01); /* Glass effect background */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px); /* Blur effect for glassmorphism */
+    position: relative;
+    width: 100%;
+    max-width: 96%;
+    margin: 0 auto;
+}
+
+#summary h2 {
+    font-size: 16px;
+    color: #002664;
+    margin: 0;
+    font-weight: 500; /* Lighter weight for modern look */
+}
+
+#summary-content {
+    margin-top: 10px;
+}
+
+#tags-container {
+    margin-bottom: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #CBEDFD; /* Pastel color */
+    color: #002664;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 2px;
+    font-size: 12px;
+}
+
+#summary-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #002664;
+}
+
+#summary-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#sentiment-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust the space between the label and the icon */
+}
+
+#sentiment-label {
+    font-size: 14px; /* Adjust font size */
+    color: #004165; /* Adjust color as needed */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    font-weight: 400; /* Normal font weight */
+}
+
+#sentiment {
+    width: 24px; /* Adjust size of the icon */
+    height: 24px; /* Adjust size of the icon */
+}
+
+#send-email {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+#send-email img {
+    width: 24px;
+    height: 24px;
+}
+.grid-item-nba {
+    background-color: rgba(255, 255, 255, 0.3); /* Glass effect background */
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px; /* Increase padding to prevent overlap */
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    display: flex;
+   /*  flex-direction: column; */
+    align-items: flex-start;
+    text-align: left;
+    gap: 10px; /* Adjusted gap for better spacing */
+    backdrop-filter: blur(8px); /* Blur effect for glassmorphism */
+    position: relative; /* Ensure that the button is positioned relative to the grid item */
+    min-height: 200px; /* Set a fixed height to avoid overlapping */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+.grid-item .content {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    gap: 10px; /* Space between icon and question title */
+}
+
+.apply-button {
+    background-color: #D7153A; /* Primary color */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+align-self: flex-end;
+
+}
+
+.apply-button:hover {
+    background-color: #b00e2b; /* Darker shade for hover effect */
+}
+
+		
+		    /* When left panel is collapsed */
+        #leftPanel.collapsed {
+           width: 0; /* Set width to 0 */
+			flex-basis: 0; /* Set flex-basis to 0 to fully collapse */
+			overflow: hidden; /* Hide any overflow content */
+			 padding: 0; /* Remove padding when collapsed */
+			margin: 0; /* Remove margin when collapsed */
+			border: none; /* Remove any borders that could cause spacing */
+        }
+
+        #rightPanel.fullscreen {
+            width: 100%; /* Full width for mobile layout */
+        }
+		
+		
+		 #leftPanel.expanded {
+           width: 70%;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+        }
+
+        #rightPanel.collapsed {
+           width: 30%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-sizing: border-box;
+        }
+		
+		input:checked + .slider {
+    background-color: #4CAF50; /* Active color */
+}
+
+#header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+  #toggleButton {	
+    background-image: url('https://img.icons8.com/ios-filled/40/microsoft-copilot.png'); /* Replace with your image URL */
+    background-size: contain; /* Ensures the image fills the button */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    border: none; /* Remove default border */
+    width: 30px; /* Set width for the button */
+    height: 30px; /* Set height for the button */
+    cursor: pointer;
+    border-radius: 8px; /* Optional: Rounded corners */
+    transition: background-color 0.3s ease;
+        }
+		
+	#toggle-container {
+    position: sticky;
+    top: 0; /* Keep the button at the top of the viewport when scrolling */
+}
+
+#rightLogo {
+    width: 60px; /* Set the desired width */
+    height: 60px; /* Set the desired height */
+    border-radius: 50%; /* Makes the image circular */
+    background-color: white; /* White background */
+    padding: 2px; /* Adds some padding inside the circle */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+   
+}
+
+#leftLogo {
+    width: 60px; /* Set the desired width */
+    height: 60px; /* Set the desired height */
+    border-radius: 50%; /* Makes the image circular */
+    background-color: white; /* White background */
+    padding: 2px; /* Adds some padding inside the circle */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+   object-fit: cover; /* Ensures the image covers the area without distortion */
+   
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+    justify-content: center; /* Center the modal */
+    align-items: center; /* Center the modal */
+    transition: opacity 0.3s ease; /* Smooth transition */
+	font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.modal-content {
+    background-color: #fff; /* White background */
+    padding: 30px;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    width: 400px; /* Width of modal */
+    text-align: center; /* Center the text */
+    position: relative; /* Position for close button */
+}
+
+.close-button {
+    color: #aaa; /* Gray color */
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer; /* Pointer cursor */
+}
+
+.close-button:hover {
+    color: #000; /* Darker on hover */
+}
+
+.modal-actions {
+    margin-top: 20px; /* Space between input and buttons */
+    display: flex; /* Use flexbox to position buttons */
+    justify-content: flex-end; /* Space buttons out */
+}
+
+#email-input {
+    width: 100%; /* Full width */
+    padding: 12px; /* Padding inside the input */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px; /* Larger font size */
+    margin-top: 10px; /* Space above input */
+}
+
+.modal-button {
+    padding: 10px 15px; /* Padding */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.send-button {
+    background-color: #D7153A; /* Primary button color */
+    color: white; /* White text */
+    border: none; /* No border */
+}
+
+.send-button:hover {
+    background-color: #b00e2b; /* Darker blue on hover */
+}
+
+.cancel-button {
+    background-color: transparent; /* No background */
+    color: #dc3545; /* Red text */
+    border: 2px solid #dc3545; /* Red border */
+}
+
+.cancel-button:hover {
+    background-color: #dc3545; /* Red background on hover */
+    color: white; /* White text on hover */
+}
+
+/* Send Email Button */
+.send-email-button {
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor */
+}

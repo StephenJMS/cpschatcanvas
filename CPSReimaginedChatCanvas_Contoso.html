@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Intelligent Advisor</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div id="mainContent">
+        <!-- Left Panel with Suggestions -->
+        <div id="leftPanel">
+            <div id="globalHeader">
+                <img id="leftLogo" alt="Company Logo" class="icon" />
+                <h1 id="dynamicAssistantName">Copilot Chat Assistant</h1>
+            </div>
+
+            <!-- Suggestions Area -->
+            <div id="suggestions">
+                <h2>Not Certain? Here’s a Helpful Question</h2>
+                <div class="grid-container">
+                    <div class="grid-item" data-question="What should I do in touch with support?">
+                        <div class="icon-container">
+                            <img src="https://img.icons8.com/nolan/64/1A6DFF/C822FF/popular-topic.png" alt="Icon 1" class="icon" />
+                        </div>
+                        <span class="question-title">What should I do in touch with support?</span>
+                    </div>
+                    <!-- Additional suggestion items go here -->
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div id="summary">
+                <h2>Your Chat Highlights</h2>
+                <div id="summary-content">
+                    <div id="tags-container">
+                        <span class="tag">Service</span>
+                        <span class="tag">Products</span>
+                        <span class="tag">Planning</span>
+                    </div>
+                    <div id="summary-text">The summary will appear here.</div>
+                </div>
+
+                <!-- Email Modal Structure -->
+                <div id="emailModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" id="closeModal">&times;</span>
+                        <h2>Enter Your Email</h2>
+                        <input type="email" id="email-input" placeholder="Enter your email" required>
+                        <div class="modal-actions">
+                            <button id="confirm-send-email" class="modal-button send-button">Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div id="summary-controls">
+                    <span id="sentiment-container">
+                        <span id="sentiment-label">Sentiment:</span>
+                        <img id="sentiment" src="https://img.icons8.com/bubbles/48/happy.png" alt="Sentiment" />
+                    </span>
+                    <button id="send-email" title="Send Summary via Email">
+                        <img src="https://img.icons8.com/nolan/64/1A6DFF/C822FF/sent.png" alt="Send Email" />
+                    </button>
+                </div>
+            </div>
+
+            <!-- Next Best Action Section -->
+            <div id="nextBestAction">
+                <h2>Take Your Next Step</h2>
+                <div class="grid-container" id="grid-container-nba">
+                    <!-- Example NBA -->
+                    <div class="grid-item-nba" data-question="I'm planning to build a swimming pool. Any advice?">
+                        <div class="icon-container">
+                            <img src="https://img.icons8.com/nolan/64/1A6DFF/C822FF/file.png" alt="Icon 1" class="icon" />
+                        </div>
+                        <span class="question-title">Services offered<br><br>Check the requirement.</span>
+                        <button class="apply-button">Enquire Now</button>
+                    </div>
+                    <!-- Additional NBAs go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel with Webchat -->
+        <div id="rightPanel">
+            <div id="globalHeader">
+                <div class="header-content" id="conversationHeader">
+                    <img id="rightLogo" alt="Company Logo" class="icon" />
+                    <h1 id="dynamicAssistantNameRight">Copilot Chat Assistant</h1>
+                </div>
+                <div class="toggle-container">
+                    <button id="toggleButton" class="toggle-button"></button>
+                </div>
+            </div>
+            <div id="webchat" role="main"></div>
+        </div>
+    </div>
+
+    <!-- Web Chat Integration -->
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat-es5.js"></script>
+    <script>
+        // Initialize variables for API and resources
+        const params = new URLSearchParams(window.location.search);
+        const passedUrl = params.get("url");
+        //const baseUrl = getBaseUrl(passedUrl);
+		let companyName = 'Contoso Academy';
+        let logoUrl = './images/logo.jpg';
+
+        // Get base URL from full URL
+        function getBaseUrl(fullUrl) {
+            const url = new URL(fullUrl);
+            const hostname = url.hostname.startsWith("www.") ? url.hostname.slice(4) : url.hostname;
+            return `${url.protocol}//${hostname}`;
+        }
+
+        window.onload = function () {
+            const leftPanel = document.getElementById("leftPanel");
+            const rightPanel = document.getElementById("rightPanel");
+
+            // Toggle panels for dynamic display
+            leftPanel.classList.toggle("collapsed");
+            rightPanel.classList.toggle("fullscreen");
+
+            // Set logos in both panels 
+			document.getElementById("leftLogo").src = logoUrl;
+            document.getElementById("rightLogo").src = logoUrl;
+            /*if (passedUrl) {
+                //logoUrl = `https://logo.clearbit.com/${baseUrl}`;
+                document.getElementById("leftLogo").src = logoUrl;
+                document.getElementById("rightLogo").src = logoUrl;
+            }*/
+
+            // Update dynamic assistant name based on the domain
+            //companyName = getDomainName(baseUrl);
+            const dynamicText = companyName + " Assistant";
+            document.getElementById("dynamicAssistantName").textContent = dynamicText;
+            document.getElementById("dynamicAssistantNameRight").textContent = dynamicText;
+        };
+
+        // Get and format domain name
+        function getDomainName(url) {
+            const domain = url.replace(/https?:\/\/(www\.)?/, "").split(".")[0];
+            return domain.charAt(0).toUpperCase() + domain.slice(1);
+        }
+		
+		 // Function to handle showing and hiding of the left and right panels
+		document.getElementById("toggleButton").addEventListener("click", function () {
+			const leftPanel = document.getElementById("leftPanel");
+			const rightPanel = document.getElementById("rightPanel");
+			const cHeader = document.getElementById("conversationHeader");
+			const toggleButton = document.getElementById("toggleButton");
+
+			// Toggle collapsed class for left panel and fullscreen class for right panel
+			leftPanel.classList.toggle("collapsed");
+			rightPanel.classList.toggle("fullscreen");
+
+			// Check the current width of the left panel to decide the toggle state
+			const currentWidth = window.getComputedStyle(leftPanel).width;
+
+			if (currentWidth === "0px") {
+				// If left panel is collapsed, update the button to show 'expanded' state
+				toggleButton.style.backgroundImage = "url('https://img.icons8.com/fluency/40/microsoft-copilot.png')";
+				cHeader.style.display = "none";  // Hide the conversation header
+
+				console.log("Panel collapsed, sending resize message.");  // Debugging log
+				window.parent.postMessage("resizeModal", "*");  // Post message to resize modal if required
+
+			} else {
+				// If left panel is expanded, update the button to show 'collapsed' state
+				toggleButton.style.backgroundImage = "url('https://img.icons8.com/ios-filled/40/microsoft-copilot.png')";
+				cHeader.style.display = "flex";  // Show the conversation header
+
+				console.log("Panel expanded, sending resize message.");  // Debugging log
+				window.parent.postMessage("resizeModal", "*");  // Post message to resize modal if required
+			}
+		});
+
+        // Chat Integration Logic
+        $(document).ready(function () {
+				const tag_nba = "";
+				let botResponses = "";
+				let store;
+				let directLine;
+				
+				//Bot Config
+                const botEndpoint = "https://ee4066971580eb3a8e98435f0512c9.0a.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crf73_bmBot/directline/token?api-version=2022-03-01-preview";
+				
+                // Conversational Intelligence Config
+                const pauQuestionsUrl = "https://prod-145.westus.logic.azure.com:443/workflows/0da53aeb59a64de185542ff3d5885903/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZFVeBR-j_sz_9tcq2MUxm834jHi4gFgYwW7F65D7QEE";
+				const pauNbaUrl = "https://prod-129.westus.logic.azure.com:443/workflows/109942efd9ba408388c370a1d328e6a9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_5gBkXS2f704eeLimuh_oJgL1AHW9NSrDL8jc6dhKbc";
+				const pauSummaryUrl = "https://prod-190.westus.logic.azure.com:443/workflows/f3533ac590594a10b21e6d64735a46a0/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wZui_JqMx4uMHdQd5GTXCoN-D-_sdlA8zlVe2eKI4xA";
+				const pauEmailUrl = "https://prod-35.westus.logic.azure.com:443/workflows/a53d70d6c8ef4f9c96b189fe7f7e38c1/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VBgQf7SlFhWlRFG26ZUkpY8ADhlVi6gfXsaYtKBzx4o";
+				
+				//Speech Config
+				//const speechSubscriptionKey = "";
+                //const speechRegion = "";
+
+            const styleOptions = {
+                primaryFont: "Segoe UI",
+				adaptiveCardsParserMaxVersion: "1.6",
+				hideSendBox: false,
+				microphoneButtonColorOnDictate: "#F33",
+				sendBoxBackground: "White",
+				useMicrophoneButtonDisabled: false,
+				showSpokenText: false,
+				hideUploadButton: false,
+				emojiSet: true,
+				backgroundColor: "transparent",
+				botAvatarInitials: "PVA",
+				accent: "#3844CA",
+				suggestedActionLayout: "carousel",
+				suggestedActionBackground: "White",
+				suggestedActionBorderColor: undefined,
+				suggestedActionBorderRadius: 10,
+				suggestedActionBorderStyle: "none",
+				suggestedActionBorderWidth: 2,
+				suggestedActionDisabledBackground: "#fff",
+				suggestedActionDisabledBorderColor: "#fff",
+				suggestedActionDisabledBorderStyle: "solid",
+				suggestedActionDisabledBorderWidth: 2,
+				suggestedActionDisabledTextColor: undefined,
+				suggestedActionHeight: 40,
+				suggestedActionImageHeight: 20,
+				suggestedActionTextColor: undefined,
+				botAvatarBackgroundColor: "#FFFFFF",
+				botAvatarImage: `${logoUrl}`,
+				userAvatarImage: "https://img.icons8.com/nolan/64/user-menu-male.png",
+				bubbleBackground: "F2F2F2",
+				bubbleBorderColor: "F2F2F2",
+				bubbleTextColor: "Black",
+				bubbleBorderRadius: 10,
+				bubbleBorderStyle: "none",
+				bubbleFromUserBackground: "rgba(255, 255, 255, 0.3)",
+				bubbleFromUserBorderColor: "rgba(255, 255, 255, 0.3)",
+				bubbleFromUserTextColor: "black",
+				bubbleFromUserBorderRadius: 10,
+				sendBoxBackground: "rgba(255, 255, 255, 0.8)",
+            };
+
+           /* const webSpeechPonyfillFactory = window.WebChat.createCognitiveServicesSpeechServicesPonyfillFactory({
+                credentials: {
+                    subscriptionKey: speechSubscriptionKey,
+                    region: speechRegion,
+                },
+            });*/
+
+            // Initialize Web Chat Direct Line
+            fetch(botEndpoint)
+                .then((response) => response.json())
+                .then((conversationInfo) => {
+                    directLine = window.WebChat.createDirectLine({
+                        token: conversationInfo.token,
+                    });
+					
+					// Initialize the store globally here
+					store = window.WebChat.createStore({}, ({ dispatch }) => (next) => (action) => {
+                    if (action.type === "DIRECT_LINE/CONNECT_FULFILLED") {
+                        dispatch({
+                            meta: {
+                                method: "keyboard",
+                            },
+                            payload: {
+                                activity: {
+                                    channelData: {
+                                        postBack: true,
+                                    },
+                                    name: "startConversation",
+                                    type: "event",
+                                },
+                            },
+                            type: "DIRECT_LINE/POST_ACTIVITY",
+                        });
+                    }
+                    return next(action);
+					});
+
+                    // Render the web chat
+                    window.WebChat.renderWebChat({
+                        directLine,
+                        styleOptions,
+						store,
+                        locale: "en-AU",                       
+                    }, document.getElementById("webchat"));
+
+                    /*// Send initial message to the bot
+                    directLine.postActivity({
+                        from: { id: "user1", name: "User" },
+                        type: "event",
+                        name: "initMessage",
+                        value: { url: `${baseUrl}` },
+                    }).subscribe(
+                        (id) => console.log("Hidden message sent, ID: ", id),
+                        (error) => console.log("Error sending message: ", error)
+                    );*/
+
+                    // Handle incoming bot responses
+                    directLine.activity$.subscribe((activity) => {
+                        if (activity.type === "message") {
+                            console.log("Bot response:", activity.text);
+                            botResponses += activity.text + " ";
+                            chatSummary(botResponses); // Update summary on bot response
+							//Fetch and update followup questions based on Chat
+							followupQuestions(botResponses);	
+							
+                        }
+                    });
+                })
+                .catch((err) => console.error("Error: ", err));
+
+			
+            // Get the chat summary from Power Automate
+            function chatSummary(botResponses) {
+                const data = { botResponse: botResponses };
+                showShimmer(); // Show loading shimmer
+
+                fetch(pauSummaryUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    updateSummary(result); // Update summary text dynamically
+                    hideShimmer(); // Hide shimmer effect
+                })
+                .catch((error) => {
+                    console.error("Error sending summary:", error);
+                    hideShimmer();
+                });
+            }
+			
+			
+			// Function to update the summary paragraph
+			function updateSummary(botResponses) {
+				const summaryText = botResponses.summary || "No summary available.";
+				const keywords = botResponses.keywords || [];
+				const sentiment = botResponses.sentiment || "neutral";
+
+				// Update the summary text in the HTML
+				$("#summary-text").text(summaryText);
+
+				// Update the tags (keywords)
+				const tagsContainer = $("#tags-container");
+				tagsContainer.empty(); // Clear existing tags
+				keywords.forEach((keyword) => {
+					tagsContainer.append(`<span class="tag">${keyword}</span>`);
+				});
+
+				// Update the sentiment icon
+				const sentimentMap = {
+					positive: "https://img.icons8.com/3d-fluency/30/grinning-face-emoji.png",
+					neutral: "https://img.icons8.com/3d-fluency/30/neutral-face-1.png",
+					negative: "https://img.icons8.com/3d-fluency/30/pouting-face-icon.png",
+				};
+				$("#sentiment").attr("src", sentimentMap[sentiment] || sentimentMap["neutral"]);
+
+				// Fetch and update next best actions based on the keywords
+				fetchNextBestActions(keywords);							
+			}
+
+			// Function to fetch and display the Next Best Actions (NBAs)
+			function fetchNextBestActions(keywords) {
+				const keywordsString = keywords.join(", ");
+				const data = {
+					tags: keywordsString					
+				};
+
+				fetch(pauNbaUrl, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(data),
+				})
+				.then((response) => response.json())
+				.then((responseData) => {
+					// Check if 'responseData' contains any array  
+					const items = Object.values(responseData).find((value) => Array.isArray(value)) || [];
+					const gridContainer = document.getElementById("grid-container-nba");
+					gridContainer.innerHTML = ""; // Clear existing content
+
+					// Add fetched NBAs to the grid container
+					items.forEach((item) => {
+						const gridItem = document.createElement("div");
+						gridItem.classList.add("grid-item-nba");
+						gridItem.setAttribute("data-question", item.Description || item.description);
+						gridItem.innerHTML = `
+							<div class="icon-container">
+								<img src="https://img.icons8.com/nolan/64/1A6DFF/C822FF/file.png" alt="Icon" class="icon">
+							</div>
+							<span class="question-title">${item.title}<br><br>${item.description || item.Description}</span>
+							<a href="${item.link}" class="apply-button" target="_blank">${item.buttontext || "Apply"}</a>
+						`;
+						gridContainer.appendChild(gridItem);
+					});
+				})
+				.catch((error) => console.error("Error fetching next best actions:", error));
+			}
+			
+			// Get the followup questions from Power Automate
+            function followupQuestions(botResponses) {
+                //const data = { botResponse: botResponses };
+                showShimmer(); // Show loading shimmer
+
+                fetch(pauQuestionsUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						botResponse: botResponses						
+					}),
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    updateSuggestions(result); // Update follow up questions text dynamically
+                    hideShimmer(); // Hide shimmer effect
+                })
+                .catch((error) => {
+                    console.error("Error sending follow up questions:", error);
+                    hideShimmer();
+                });
+            }
+			
+
+			// Function to fetch and update suggestions
+			function updateSuggestions(result) {
+				// Check if 'responseData' contains any array                            
+                const questions = Object.values(result).find((value) => Array.isArray(value)) || [];
+				
+				// Clear existing suggestions
+				const $suggestionsList = $("#suggestions .grid-container");
+				$suggestionsList.empty(); 
+
+				// Add fetched suggestions to the suggestion list
+				questions.forEach((questionObj) => {
+					const question = questionObj.item;
+					if (typeof question === "string" && question.trim() !== "") {
+						const $item = $(`
+							<div class="grid-item" data-question="${question}">
+								<div class="icon-container">
+									<img src="https://img.icons8.com/nolan/64/1A6DFF/C822FF/popular-topic.png" alt="Icon" class="icon">
+								</div>
+								<span class="question-title">${question}</span>
+							</div>
+						`);
+						$suggestionsList.append($item);
+					}
+				});
+
+				// Attach event listener for each suggestion item to send message to the bot
+				$("#suggestions")
+					.off("click", ".grid-item")
+					.on("click", ".grid-item", function () {
+						const question = $(this).data("question");
+						console.log("Sending question: " + question);							
+						if (directLine) {
+						// Use directLine.postActivity to send the message directly to the bot
+						directLine.postActivity({
+							from: { id: "user1", name: "User" },  // Adjust user ID and name as needed
+							type: "message",  // Message type
+							text: question    // The actual question or message to send
+						}).subscribe(
+							(id) => console.log("Message sent successfully, ID: ", id),
+							(error) => console.error("Error sending message: ", error)
+						);
+					} else {
+						console.error("Direct Line is not available.");
+					}						
+					});
+			}
+
+
+            // Functions to show and hide shimmer
+            function showShimmer() { $(".shimmer-wrapper").css("display", "block"); }
+            function hideShimmer() { $(".shimmer-wrapper").css("display", "none"); }
+
+            // Functions for modal interactions (send email)
+            const emailModal = document.getElementById('emailModal');
+            const sendEmailButton = document.getElementById('send-email');
+            const closeModalButton = document.getElementById('closeModal');
+            const confirmSendEmailButton = document.getElementById('confirm-send-email');
+
+            sendEmailButton.addEventListener('click', function() {
+                emailModal.style.display = 'flex'; // Show modal
+            });
+
+            closeModalButton.addEventListener('click', function() {
+                emailModal.style.display = 'none'; // Close modal
+            });
+
+            confirmSendEmailButton.addEventListener('click', function() {
+                const emailInput = document.getElementById('email-input');
+                const recipientEmail = emailInput.value.trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (emailPattern.test(recipientEmail)) {
+                    sendEmail(recipientEmail); // Call email function
+                    emailModal.style.display = 'none'; // Close modal
+                } else {
+                    alert('Please enter a valid email address.');
+                }
+            });
+			
+			// Function to build the email body for sending summary via email
+			function buildEmailBody(dateTime, logoUrl) {
+				const sentiment = $("#sentiment").attr("src"); // Extract sentiment icon URL
+				const summary = $("#summary-text").text().trim(); // Extract summary
+				//const companyName = getDomainName(baseUrl); // Get company name from URL
+
+				// Extract forms from the NBA section
+				const forms = Array.from(document.querySelectorAll("#grid-container-nba .grid-item-nba")).map(element => {
+					const title = element.querySelector(".question-title").textContent.trim();
+					const link = element.querySelector(".apply-button").getAttribute("href");
+					return {
+						name: title.split("\n")[0],
+						description: title.split("\n")[1] || "No description available",
+						link: link || "#"
+					};
+				});
+
+				// Generate HTML for forms section
+				const formsHtml = forms.map(form => `
+					<p><strong>Form Name:</strong> ${form.name}</p>
+					<p><strong>Description:</strong> ${form.description}</p>
+					<a href="${form.link}" class="button">Access Form</a>
+					<br><br>
+				`).join("");
+
+				// Build email body content in HTML
+				return `
+					<!DOCTYPE html>
+					<html lang="en">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<style>
+							body { font-family: Arial, sans-serif; color: #333; }
+							.container { width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
+							.header { text-align: center; padding-bottom: 20px; }
+							.header img { max-width: 120px; height: 80px; }
+							.content h2 { color: #262677; }
+							.footer { text-align: center; font-size: 14px; color: #888; }
+							.button { padding: 10px 20px; font-size: 16px; color: #fff; background-color: #262677; text-decoration: none; border-radius: 5px; }
+						</style>
+					</head>
+					<body>
+						<div class="container">
+							<div class="header">
+								<img src="${logoUrl}" alt="Company Logo" />
+							</div>
+							<div class="content">
+								<h2>Chat Highlights</h2>
+								<p><strong>Date and Time:</strong> ${dateTime}</p>
+								<p><strong>Sentiment:</strong> <img src="${sentiment}" alt="Sentiment Icon" /></p>
+								<p><strong>Summary:</strong> ${summary}</p>
+								<h2>Next Steps</h2>
+								${formsHtml}
+								<p><strong>Company Name:</strong> ${companyName}</p>
+								<p><strong>Url:</strong> ${baseUrl}</p>
+							</div>
+							<div class="footer">
+								&copy; ${new Date().getFullYear()} ${companyName}. All rights reserved.
+							</div>
+						</div>
+					</body>
+					</html>
+				`;
+			}
+
+            // Email sending logic
+            function sendEmail(recipientEmail) {
+                const now = new Date();
+                const chatDateTime = now.toLocaleString(); // Get date and time
+
+                const payload = {
+                    email: {
+                        to: recipientEmail,
+                        subject: "Chat Summary from CPS Reimagined Demo",
+                        body: buildEmailBody(now, logoUrl), // Helper function to build email body
+                    },
+                };
+
+                fetch(pauEmailUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        alert("Message sent successfully!");
+                    } else {
+                        alert("Failed to send the message.");
+                    }
+                })
+                .catch((error) => console.error("Error sending email:", error));
+            }
+        });
+    </script>
+</body>
+</html>
